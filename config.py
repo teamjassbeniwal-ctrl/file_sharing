@@ -47,7 +47,7 @@ try:
     ADMINS=[]
     for x in (os.environ.get("ADMINS", "1480923991 5069922547 6695586027").split()):
         ADMINS.append(int(x))
-except ValueError:
+except ValueError: 
         raise Exception("Your Admins list does not contain valid integers.")
 
 #Force sub message 
