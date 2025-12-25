@@ -139,5 +139,16 @@ def get_readable_time(seconds: int) -> str:
     up_time += ":".join(time_list)
     return up_time
 
+async def delete_file(messages, client, process):
+    await asyncio.sleep(AUTO_DELETE_TIME)
+    for msg in messages:
+        try:
+            await client.delete_messages(chat_id=msg.chat.id, message_ids=[msg.id])
+        except Exception as e:
+            await asyncio.sleep(e.x)
+            print(f"The attempt to delete the media {msg.id} was unsuccessful: {e}")
+
+    await process.edit_text(AUTO_DEL_SUCCESS_MSG)
+
 
 subscribed = filters.create(is_subscribed)
