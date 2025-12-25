@@ -1,9 +1,3 @@
-#(©)Codexbotz
-#rymme
-# https://www.youtube.com/@ultroidofficial
-
-
-
 
 from aiohttp import web
 
