@@ -34,7 +34,7 @@ SHORTLINK_URL = os.environ.get("SHORTLINK_URL", "8d6b2153682ca17a4f89e662199d6b5
 SHORTLINK_API = os.environ.get("SHORTLINK_API", "Arolinks.com")
 VERIFY_EXPIRE = int(os.environ.get('VERIFY_EXPIRE', 43200)) # Add time in seconds
 IS_VERIFY = os.environ.get("IS_VERIFY", "False")
-TUT_VID = os.environ.get("TUT_VID", "https://t.me/allbotsupdates1") # shareus ka tut_vid he 
+TUT_VID = os.environ.get("TUT_VID", "https://t.me/+JAdctcMYdSUzZGU1") # shareus ka tut_vid he 
 
 #force sub channel id, if you want enable force sub
 FORCE_SUB_CHANNEL = int(os.environ.get("FORCE_SUB_CHANNEL", "-1003598465147"))
