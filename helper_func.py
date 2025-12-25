@@ -6,13 +6,11 @@ from pyrogram.enums import ChatMemberStatus
 from config import FORCE_SUB_CHANNEL, ADMINS, AUTO_DELETE_TIME, AUTO_DEL_SUCCESS_MSG
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 from pyrogram.errors import FloodWait
-from shortzy import Shortzy
-import requests
-import time
-from datetime import datetime
-from database.database import user_data, db_verify_status, db_update_verify_status
 
-# ====================== Subscription check ======================
+from shortzy import Shortzy
+from database.database import db_verify_status, db_update_verify_status
+
+# ===================== SUBSCRIPTION CHECK =====================
 async def is_subscribed(filter, client, update):
     if not FORCE_SUB_CHANNEL:
         return True
@@ -23,66 +21,24 @@ async def is_subscribed(filter, client, update):
         member = await client.get_chat_member(chat_id=FORCE_SUB_CHANNEL, user_id=user_id)
     except UserNotParticipant:
         return False
+
     return member.status in [ChatMemberStatus.OWNER, ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.MEMBER]
 
 subscribed = filters.create(is_subscribed)
 
-# ====================== Base64 Encoding / Decoding ======================
+# ===================== BASE64 ENCODE / DECODE =====================
 async def encode(string):
     string_bytes = string.encode("ascii")
     base64_bytes = base64.urlsafe_b64encode(string_bytes)
-    base64_string = base64_bytes.decode("ascii").strip("=")
-    return base64_string
+    return base64_bytes.decode("ascii").strip("=")
 
 async def decode(base64_string):
-    base64_string = base64_string.strip("=")  # handle old links with =
+    base64_string = base64_string.strip("=")
     base64_bytes = (base64_string + "=" * (-len(base64_string) % 4)).encode("ascii")
     string_bytes = base64.urlsafe_b64decode(base64_bytes)
     return string_bytes.decode("ascii")
 
-# ====================== Fetch Messages from DB channel ======================
-async def get_messages(client, message_ids):
-    messages = []
-    total_messages = 0
-    while total_messages != len(message_ids):
-        batch_ids = message_ids[total_messages:total_messages + 200]
-        try:
-            msgs = await client.get_messages(chat_id=client.db_channel.id, message_ids=batch_ids)
-        except FloodWait as e:
-            await asyncio.sleep(e.value)
-            msgs = await client.get_messages(chat_id=client.db_channel.id, message_ids=batch_ids)
-        except Exception as e:
-            print(f"Error fetching messages: {e}")
-            msgs = []
-        total_messages += len(batch_ids)
-        messages.extend(msgs)
-    return messages
-
-# ====================== Get message ID from link ======================
-async def get_message_id(client, message):
-    if message.forward_from_chat:
-        if message.forward_from_chat.id == client.db_channel.id:
-            return message.forward_from_message_id
-        else:
-            return 0
-    elif message.forward_sender_name:
-        return 0
-    elif message.text:
-        pattern = r"https://t.me/(?:c/)?(.*)/(\d+)"
-        matches = re.match(pattern, message.text)
-        if not matches:
-            return 0
-        channel_id = matches.group(1)
-        msg_id = int(matches.group(2))
-        if channel_id.isdigit():
-            if f"-100{channel_id}" == str(client.db_channel.id):
-                return msg_id
-        else:
-            if channel_id == client.db_channel.username:
-                return msg_id
-    return 0
-
-# ====================== Verification ======================
+# ===================== VERIFY STATUS =====================
 async def get_verify_status(user_id):
     return await db_verify_status(user_id)
 
@@ -94,26 +50,26 @@ async def update_verify_status(user_id, verify_token="", is_verified=False, veri
     current['link'] = link
     await db_update_verify_status(user_id, current)
 
-# ====================== Shortlink ======================
+# ===================== SHORTLINK =====================
 async def get_shortlink(url, api, link):
     shortzy = Shortzy(api_key=api, base_site=url)
     return await shortzy.convert(link)
 
-# ====================== Time formatting ======================
+# ===================== TIME UTILITIES =====================
 def get_exp_time(seconds):
     periods = [('days', 86400), ('hours', 3600), ('mins', 60), ('secs', 1)]
     result = ''
-    for period_name, period_seconds in periods:
-        if seconds >= period_seconds:
-            period_value, seconds = divmod(seconds, period_seconds)
-            result += f'{int(period_value)}{period_name}'
+    for name, sec in periods:
+        if seconds >= sec:
+            val, seconds = divmod(seconds, sec)
+            result += f'{int(val)}{name}'
     return result
 
 def get_readable_time(seconds: int) -> str:
     count = 0
     up_time = ""
     time_list = []
-    time_suffix_list = ["s", "m", "h", "days"]
+    suffix = ["s", "m", "h", "days"]
     while count < 4:
         count += 1
         remainder, result = divmod(seconds, 60) if count < 3 else divmod(seconds, 24)
@@ -121,29 +77,20 @@ def get_readable_time(seconds: int) -> str:
             break
         time_list.append(int(result))
         seconds = int(remainder)
-    for x in range(len(time_list)):
-        time_list[x] = str(time_list[x]) + time_suffix_list[x]
+    for i in range(len(time_list)):
+        time_list[i] = str(time_list[i]) + suffix[i]
     if len(time_list) == 4:
         up_time += f"{time_list.pop()}, "
     time_list.reverse()
     up_time += ":".join(time_list)
     return up_time
 
-# ====================== Auto Delete Messages ======================
+# ===================== AUTO DELETE FILE =====================
 async def delete_file(messages, client, process):
-    try:
-        await asyncio.sleep(AUTO_DELETE_TIME)
-    except Exception as e:
-        print(f"Sleep error: {e}")
+    await asyncio.sleep(AUTO_DELETE_TIME)
     for msg in messages:
         try:
             await client.delete_messages(chat_id=msg.chat.id, message_ids=[msg.id])
-        except FloodWait as e:
-            await asyncio.sleep(e.value)
-            await client.delete_messages(chat_id=msg.chat.id, message_ids=[msg.id])
         except Exception as e:
-            print(f"Failed to delete message {msg.id}: {e}")
-    try:
-        await process.edit_text(AUTO_DEL_SUCCESS_MSG)
-    except Exception as e:
-        print(f"Failed to edit delete message: {e}")
+            print(f"Failed to delete {msg.id}: {e}")
+    await process.edit_text(AUTO_DEL_SUCCESS_MSG)
