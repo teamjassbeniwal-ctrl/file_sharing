@@ -1,16 +1,12 @@
-
-from aiohttp import web
-from plugins import web_server
-
-import pyromod.listen
-from pyrogram import Client
-from pyrogram.enums import ParseMode
 import sys
 from datetime import datetime
-
+from aiohttp import web
+from pyrogram import Client
+from pyrogram.enums import ParseMode
 from config import API_HASH, APP_ID, LOGGER, TG_BOT_TOKEN, TG_BOT_WORKERS, FORCE_SUB_CHANNEL, CHANNEL_ID, PORT
-import pyrogram.utils
+from plugins import web_server
 
+import pyrogram.utils
 pyrogram.utils.MIN_CHAT_ID = -999999999999
 pyrogram.utils.MIN_CHANNEL_ID = -100999999999999
 
@@ -20,9 +16,7 @@ class Bot(Client):
             name="Bot",
             api_hash=API_HASH,
             api_id=APP_ID,
-            plugins={
-                "root": "plugins"
-            },
+            plugins={"root": "plugins"},
             workers=TG_BOT_WORKERS,
             bot_token=TG_BOT_TOKEN
         )
@@ -42,34 +36,25 @@ class Bot(Client):
                 self.invitelink = link
             except Exception as a:
                 self.LOGGER(__name__).warning(a)
-                self.LOGGER(__name__).warning("Bot can't Export Invite link from Force Sub Channel!")
-                self.LOGGER(__name__).warning(f"Please Double check the FORCE_SUB_CHANNEL value and Make sure Bot is Admin in channel with Invite Users via Link Permission, Current Force Sub Channel Value: {FORCE_SUB_CHANNEL}")
-                self.LOGGER(__name__).info("\nBot Stopped. Join https://t.me/allbotsupdates1 for support")
+                self.LOGGER(__name__).warning("Cannot export invite link from force-sub channel.")
                 sys.exit()
+
         try:
             db_channel = await self.get_chat(CHANNEL_ID)
             self.db_channel = db_channel
             test = await self.send_message(chat_id=db_channel.id, text="Test Message")
             await test.delete()
         except Exception as e:
-            self.LOGGER(__name__).warning(f"Error occurred: {e}")
-            self.LOGGER(__name__).warning(f"CHANNEL_ID: {CHANNEL_ID}, DB Channel ID: {db_channel.id if 'db_channel' in locals() else 'N/A'}")
-            self.LOGGER(__name__).warning(f"Make sure bot is Admin in DB Channel, and Double-check the CHANNEL_ID value.")
-            self.LOGGER(__name__).info("\nBot Stopped. Join https://t.me/allbotsupdates1 for support")
+            self.LOGGER(__name__).warning(f"DB channel error: {e}")
             sys.exit()
 
         self.set_parse_mode(ParseMode.HTML)
-        self.LOGGER(__name__).info(f"Bot Running..!\n\nCreated by \nhttps://t.me/allbotsupdates1")
-        self.LOGGER(__name__).info(f""" \n\n       
-(っ◔◡◔)っ ♥ Teqm JB ♥
-░╚════╝░░╚════╝░╚═════╝░╚══════╝
-                                          """)
         self.username = usr_bot_me.username
-        #web-response
+
+        # web server
         app = web.AppRunner(await web_server())
         await app.setup()
-        bind_address = "0.0.0.0"
-        await web.TCPSite(app, bind_address, PORT).start()
+        await web.TCPSite(app, "0.0.0.0", PORT).start()
 
     async def stop(self, *args):
         await super().stop()
