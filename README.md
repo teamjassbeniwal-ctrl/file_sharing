@@ -5,10 +5,10 @@
 </div>
 
 <p align="center">
-  <a href="https://t.me/ultroid_official">
+  <a href="https://t.me/allbotsupdates1">
     <img src="https://img.shields.io/badge/Ultroid%20%F0%9D%95%8F%20Official-Channel-blue?style=for-the-badge&logo=telegram" alt="Ultroid Official Channel">
   </a>
-  <a href="https://t.me/ultroidofficial_chat">
+  <a href="https://t.me/allbotsupdates1">
     <img src="https://img.shields.io/badge/Ultroid%20%F0%9D%95%8F%20Official-Group-blue?style=for-the-badge&logo=telegram" alt="Ultroid Official Group">
   </a>
 </p>
@@ -130,7 +130,7 @@ stats - checking your bot uptime
 
 
 💬 Support
-Join Our [Telegram Group](https://www.telegram.dog/ultroidofficial_chat) For Support/Assistance And Our [Channel](https://www.telegram.dog/ultroid_official) For Updates.   
+Join Our [Telegram Group](https://t.me/allbotsupdates1) For Support/Assistance And Our [Channel]() For Updates.   
    
 Report Bugs, Give Feature Requests There..   
 
@@ -144,7 +144,7 @@ GNU GPLv3 [![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](ht
 
 [FILE-SHARING-BOT](https://github.com/7thofficial/File-Sharing-Bot/) is Free Software: You can use, study share and improve it at your
 will. Specifically you can redistribute and/or modify it under the terms of the
-[GNU General Public License](https://www.gnu.org/licenses/gpl.html) as
+[GNU General Public LicenseGNU General Public License](https://www. as
 published by the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version. 
 
