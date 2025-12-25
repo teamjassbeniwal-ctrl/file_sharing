@@ -7,16 +7,16 @@ TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "")
 
 #Your API ID & API HASH from my.telegram.org 
 #Your API ID from my.telegram.org
-APP_ID = int(os.environ.get("APP_ID", "25331263"))
+APP_ID = int(os.environ.get("APP_ID", "31212516"))
 
 #Your API Hash from my.telegram.org
-API_HASH = os.environ.get("API_HASH", "cab85305bf85125a2ac053210bcd1030")
+API_HASH = os.environ.get("API_HASH", "ccc20df465364045538da8ecf8954992l")
 
 #Your db channel Id
-CHANNEL_ID = int(os.environ.get("CHANNEL_ID", "-1002828142957"))
+CHANNEL_ID = int(os.environ.get("CHANNEL_ID", "-1001925121665"))
 
 #OWNER ID
-OWNER_ID = int(os.environ.get("OWNER_ID", "1955406483"))
+OWNER_ID = int(os.environ.get("OWNER_ID", "6645288126"))
 
 #Port
 PORT = os.environ.get("PORT", "8585")
@@ -30,14 +30,14 @@ DB_NAME = os.environ.get("DATABASE_NAME", "Cluster0")
 # check my discription to help by using my refer link of shareus.io
 # 
 
-SHORTLINK_URL = os.environ.get("SHORTLINK_URL", "")
-SHORTLINK_API = os.environ.get("SHORTLINK_API", "")
+SHORTLINK_URL = os.environ.get("SHORTLINK_URL", "8d6b2153682ca17a4f89e662199d6b5917893bf0")
+SHORTLINK_API = os.environ.get("SHORTLINK_API", "Arolinks.com")
 VERIFY_EXPIRE = int(os.environ.get('VERIFY_EXPIRE', 43200)) # Add time in seconds
 IS_VERIFY = os.environ.get("IS_VERIFY", "False")
 TUT_VID = os.environ.get("TUT_VID", "https://t.me/allbotsupdates1") # shareus ka tut_vid he 
 
 #force sub channel id, if you want enable force sub
-FORCE_SUB_CHANNEL = int(os.environ.get("FORCE_SUB_CHANNEL", "-1003643481811"))
+FORCE_SUB_CHANNEL = int(os.environ.get("FORCE_SUB_CHANNEL", "-1003598465147"))
 
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
 
